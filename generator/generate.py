@@ -102,7 +102,7 @@ def main() -> None:
     parser.add_argument(
         "--config",
         required=True,
-        help="Path to the nf-dev-guidelines config file (e.g. .github/nf-dev-guidelines.yaml)",
+        help="Path to the nf-dev-guidelines config file (e.g. assets/nf-dev-guidelines.yaml)",
     )
     parser.add_argument(
         "--guidelines",

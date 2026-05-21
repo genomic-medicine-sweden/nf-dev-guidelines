@@ -24,7 +24,7 @@ nf-dev-guidelines/
 
 ## Consuming repository setup
 
-### 1. Add `.github/nf-dev-guidelines.yaml`
+### 1. Add `assets/nf-dev-guidelines.yaml`
 
 Create this file in the consuming repository:
 
@@ -105,7 +105,7 @@ jobs:
       - name: Generate CONTRIBUTING.md
         run: |
           python /tmp/nf-dev-guidelines/generator/generate.py \
-            --config .github/nf-dev-guidelines.yaml \
+            --config assets/nf-dev-guidelines.yaml \
             --guidelines /tmp/nf-dev-guidelines \
             --repo-root . \
             --output docs/CONTRIBUTING.md
@@ -133,7 +133,7 @@ Add the following to `.nf-core.yml` in the consuming repository:
 ```yaml
 lint:
   template_strings:
-    - .github/nf-dev-guidelines.yaml
+    - assets/nf-dev-guidelines.yaml
 ```
 
 ## Template variables reference
