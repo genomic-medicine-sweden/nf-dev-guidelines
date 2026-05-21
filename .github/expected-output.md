@@ -1,8 +1,11 @@
 <!-- THIS FILE IS AUTO-GENERATED. DO NOT EDIT DIRECTLY. -->
 <!-- To update pipeline-specific content: edit repo-config.yaml or your custom section files. -->
-<!-- To update shared guidelines: trigger or wait for the weekly sync workflow. -->
+<!-- To update shared guidelines: trigger or wait for the daily sync workflow. -->
 
 # Test Pipeline Contributing Guide
+
+<!-- START doctoc -->
+<!-- END doctoc -->
 
 Test pipeline for validating the nf-dev-guidelines generator.
 
@@ -105,13 +108,13 @@ There are typically two types of tests that run:
 #### Lint tests
 
 `nf-core` has a [set of guidelines](https://nf-co.re/developers/guidelines) which all pipelines must adhere to.
-To enforce these and ensure that all pipelines stay in sync, we have developed a helper tool which runs checks on the pipeline code. This is in the [nf-core/tools repository](https://github.com/nf-core/tools) and once installed can be run locally with the `nf-core pipelines lint <pipeline-directory>` command.
+To enforce these and ensure that all pipelines stay in sync, nf-core has developed a helper tool which runs checks on the pipeline code. This is in the [nf-core/tools repository](https://github.com/nf-core/tools) and once installed can be run locally with the `nf-core pipelines lint <pipeline-directory>` command.
 
 If any failures or warnings are encountered, please follow the listed URL for more documentation.
 
 #### Pipeline tests
 
-Pipelines are set up with a minimal set of test-data.
+This pipeline is set up with a minimal set of test-data.
 `GitHub Actions` then runs the pipeline on this data to ensure that it exits successfully.
 If there are any test failures then the automated check has status set to fail.
 These tests are run both with the latest available version of `Nextflow` and also the minimum required version that is stated in the pipeline code.
@@ -155,12 +158,12 @@ If you wish to contribute a new step, please use the following coding standards:
 
 - Process-level options go in `conf/subworkflows/<subworkflow_name>.config`, not inline in the subworkflow `.nf` file.
 - Use module configs strictly for defining `ext.args`, `ext.args2`, and `ext.prefix`. Do not place complex decision-making, conditions or workflow behaviour logic there.
-- Conditional behavior (e.g. save as CRAM vs BAM) is handled in the subworkflow via `channel.empty()` gating — not via config-level flags.
+- Conditional behavior (e.g. save as CRAM vs BAM) should be handled in the subworkflow — not via config-level flags.
 - Process resource requirements (CPUs / memory / time) go in `conf/base.config` using `withLabel:` selectors so they can be shared across processes. Use `${task.cpus}` and `${task.memory}` in `script:` blocks to apply them dynamically.
 
 ### Writing tests
 
-- Every subworkflow should have a test at `subworkflows/local/<name>/tests/main.nf.test`.
+- Every subworkflow should have tests at `subworkflows/local/<name>/tests/main.nf.test`.
 - Snapshot files (`*.nf.test.snap`) are committed alongside tests — update them when outputs change.
 - Pipeline-level tests live in `tests/`.
 
@@ -170,14 +173,14 @@ If you wish to contribute a new step, please use the following coding standards:
 
   ```groovy
   take:
-      ch_vcf                // channel: [mandatory] [ val(meta), path(vcf) ]
-      ch_reduced_penetrance // channel: [optional]  [ path(penetrance) ]
-      val_aligner           // string:  [mandatory] aligner name (bwa/bwamem2/bwameme)
-      process_with_sort     // Boolean
+    ch_vcf                // channel: [mandatory] [ val(meta), path(vcf) ]
+    ch_reduced_penetrance // channel: [optional]  [ path(penetrance) ]
+    val_aligner           // string:  [mandatory] aligner name (bwa/bwamem2/bwameme)
+    process_with_sort     // Boolean
 
   emit:
-      vcf     = ch_vcf      // channel: [ val(meta), path(vcf) ]
-      publish = ch_publish  // channel: [ val(destination), val(value) ]
+    vcf     = ch_vcf      // channel: [ val(meta), path(vcf) ]
+    publish = ch_publish  // channel: [ val(destination), val(value) ]
   ```
 
 - Use `ch_* = <...>` to declare a new channel. Avoid using `.set { ch_* }`.
