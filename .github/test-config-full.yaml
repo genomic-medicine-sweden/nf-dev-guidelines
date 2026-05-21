@@ -50,4 +50,4 @@ vars:
 
 custom_sections:
   - title: Publishing
-    file: test-custom-publishing.md
+    file: .github/test-custom-publishing.md

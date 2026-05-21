@@ -113,12 +113,17 @@ def main() -> None:
     parser.add_argument(
         "--config",
         required=True,
-        help="Path to repo-config.yaml in the consuming repository",
+        help="Path to the nf-dev-guidelines config file (e.g. .github/nf-dev-guidelines.yaml)",
     )
     parser.add_argument(
         "--guidelines",
         required=True,
         help="Path to the nf-dev-guidelines repository root",
+    )
+    parser.add_argument(
+        "--repo-root",
+        default=".",
+        help="Root of the consuming repository; custom section file paths are relative to this (default: CWD)",
     )
     parser.add_argument(
         "--output",
@@ -129,17 +134,19 @@ def main() -> None:
 
     config_path = Path(args.config).resolve()
     guidelines_dir = Path(args.guidelines).resolve()
+    repo_root = Path(args.repo_root).resolve()
     output_path = Path(args.output).resolve()
 
     if not config_path.exists():
         sys.exit(f"ERROR: Config file not found: {config_path}")
     if not guidelines_dir.is_dir():
         sys.exit(f"ERROR: Guidelines directory not found: {guidelines_dir}")
+    if not repo_root.is_dir():
+        sys.exit(f"ERROR: Repo root not found: {repo_root}")
 
     config = load_config(config_path)
     raw_vars = config.get("vars", {})
     template_vars = {k: v.strip() if isinstance(v, str) else v for k, v in raw_vars.items()}
-    repo_root = config_path.parent
 
     intro = render_string(
         config["intro"].strip(),

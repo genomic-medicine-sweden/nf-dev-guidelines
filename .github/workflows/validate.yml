@@ -27,6 +27,7 @@ jobs:
           python generator/generate.py \
             --config .github/test-config.yaml \
             --guidelines . \
+            --repo-root . \
             --output /tmp/CONTRIBUTING_test.md
 
       - name: Check output matches golden file
@@ -39,6 +40,7 @@ jobs:
           python generator/generate.py \
             --config .github/test-config-full.yaml \
             --guidelines . \
+            --repo-root . \
             --output /tmp/CONTRIBUTING_test_full.md
 
       - name: Lint both outputs

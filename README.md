@@ -24,9 +24,9 @@ nf-dev-guidelines/
 
 ## Consuming repository setup
 
-### 1. Add `repo-config.yaml`
+### 1. Add `.github/nf-dev-guidelines.yaml`
 
-Place this file at the root of the consuming repository:
+Create this file in the consuming repository:
 
 ```yaml
 title: My Pipeline Contributing Guide
@@ -104,8 +104,9 @@ jobs:
       - name: Generate CONTRIBUTING.md
         run: |
           python /tmp/nf-dev-guidelines/generator/generate.py \
-            --config repo-config.yaml \
+            --config .github/nf-dev-guidelines.yaml \
             --guidelines /tmp/nf-dev-guidelines \
+            --repo-root . \
             --output CONTRIBUTING.md
 
       - name: Create pull request

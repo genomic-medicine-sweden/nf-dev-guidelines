@@ -10,11 +10,11 @@ install:
 	pip install -r requirements.txt
 
 generate:
-	python generator/generate.py --config $(CONFIG) --guidelines $(GUIDELINES) --output $(OUTPUT)
+	python generator/generate.py --config $(CONFIG) --guidelines $(GUIDELINES) --repo-root . --output $(OUTPUT)
 	@echo "Output written to $(OUTPUT)"
 
 generate-full:
-	python generator/generate.py --config $(CONFIG_FULL) --guidelines $(GUIDELINES) --output /tmp/CONTRIBUTING_preview_full.md
+	python generator/generate.py --config $(CONFIG_FULL) --guidelines $(GUIDELINES) --repo-root . --output /tmp/CONTRIBUTING_preview_full.md
 	@echo "Output written to /tmp/CONTRIBUTING_preview_full.md"
 
 generate-golden:
