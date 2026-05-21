@@ -12,7 +12,6 @@ All sections listed below are available. Include them by name in the `sections:`
 
 | Section | Heading level | Description |
 |---|---|---|
-| `general_header` | `##` | "General" section header |
 | `contribution_workflow` | `###` | Fork/PR contribution steps |
 | `pull_requests` | `####` | PR checklist and conventions |
 | `review` | `#####` | Code review expectations |

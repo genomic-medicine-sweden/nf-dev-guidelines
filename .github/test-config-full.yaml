@@ -4,7 +4,6 @@ intro: |
   Test pipeline for {{ repo_name }} — validates the generator with all optional variables set.
 
 sections:
-  - general_header
   - contribution_workflow
   - pull_requests
   - review

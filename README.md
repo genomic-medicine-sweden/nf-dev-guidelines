@@ -35,7 +35,6 @@ intro: |
   My pipeline does X, Y, Z.
 
 sections:
-  - general_header
   - contribution_workflow
   - pull_requests
   - review
