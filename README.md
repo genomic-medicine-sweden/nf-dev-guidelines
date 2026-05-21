@@ -59,11 +59,8 @@ vars:
   reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."
   modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one. Only add to modules/local/ as a last resort when the use case is too pipeline-specific."
 
-custom_sections:
-  - title: Publishing
-    file: contributing/publishing.md
-  - title: GPU Workflows
-    file: contributing/gpu.md
+  - file: contributing/publishing.md
+  - file: contributing/gpu.md
 ```
 
 ### 2. Add pipeline-specific section files

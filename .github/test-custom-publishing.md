@@ -1,3 +1,5 @@
+## Publishing
+
 Output files are published via a dedicated `PUBLISH` channel. Every process that produces files for end-users must emit to `ch_publish` using the pattern:
 
 ```groovy

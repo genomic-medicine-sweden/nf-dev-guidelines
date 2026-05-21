@@ -27,5 +27,3 @@ vars:
   workflow_file: workflows/test-pipeline.nf
   reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."
   modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one."
-
-custom_sections: []

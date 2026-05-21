@@ -18,6 +18,7 @@ sections:
   - configuration
   - writing_tests
   - style
+  - file: .github/test-custom-publishing.md
 
 vars:
   repo_name: genomic-medicine-sweden/test-pipeline
@@ -47,7 +48,3 @@ vars:
   extra_test_notes: "- Use `addParams` to inject test-specific parameter overrides into your nf-test setup block."
 
   extra_style_notes: "- Use `snake_case` for all local variable and channel names."
-
-custom_sections:
-  - title: Publishing
-    file: .github/test-custom-publishing.md
