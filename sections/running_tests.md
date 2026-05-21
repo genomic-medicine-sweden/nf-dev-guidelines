@@ -28,7 +28,7 @@ If any failures or warnings are encountered, please follow the listed URL for mo
 
 #### Pipeline tests
 
-Pipelines are set up with a minimal set of test-data.
+This pipeline is set up with a minimal set of test-data.
 `GitHub Actions` then runs the pipeline on this data to ensure that it exits successfully.
 If there are any test failures then the automated check has status set to fail.
 These tests are run both with the latest available version of `Nextflow` and also the minimum required version that is stated in the pipeline code.
