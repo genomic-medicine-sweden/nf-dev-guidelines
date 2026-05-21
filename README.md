@@ -124,6 +124,18 @@ jobs:
           delete-branch: true
 ```
 
+### 4. Disable nf-core `template_strings` lint for the generated file
+
+nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `nf-dev-guidelines.yaml` file contains `{{ }}` which would cause this check to fail.
+
+Add the following to `.nf-core.yml` in the consuming repository:
+
+```yaml
+lint:
+  template_strings:
+    - .github/nf-dev-guidelines.yaml
+```
+
 ## Template variables reference
 
 Variables are passed via `vars:` in `repo-config.yaml` and are available to all section files as Jinja2 variables.
