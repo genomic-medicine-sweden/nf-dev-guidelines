@@ -72,7 +72,11 @@ Create any files referenced in `custom_sections`. Each file contains the section
 
 ### 3. Add the sync workflow
 
-Add `.github/workflows/sync-guidelines.yml` to the consuming repository:
+Add `.github/workflows/sync-guidelines.yml` to the consuming repository.
+
+> **Required repository setting:** go to **Settings → Actions → General → Workflow permissions** and enable **"Allow GitHub Actions to create and approve pull requests"**. Without this the `create-pull-request` step will fail.
+
+
 
 ```yaml
 name: Sync guidelines
