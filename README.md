@@ -84,7 +84,7 @@ name: Sync guidelines
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 8 * * 1"  # weekly on Monday
+    - cron: "0 8 * * *" # daily
 
 jobs:
   sync:
@@ -166,4 +166,4 @@ Variables are passed via `vars:` in `repo-config.yaml` and are available to all 
 
 1. Create `sections/<name>.md` — a Jinja2 template starting with the appropriate markdown heading.
 2. Update `sections/` variable documentation in this README if it introduces new template variables.
-3. Merge to `main` — consuming repositories will pick up the change on their next weekly sync.
+3. Merge to `main` — consuming repositories will pick up the change on their next daily sync.
