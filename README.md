@@ -113,6 +113,9 @@ jobs:
             --repo-root . \
             --output docs/CONTRIBUTING.md
 
+      - name: Generate table of contents
+        run: npx --yes doctoc --github docs/CONTRIBUTING.md
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
