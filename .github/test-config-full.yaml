@@ -1,0 +1,54 @@
+title: Test Pipeline Contributing Guide (full)
+
+intro: |
+  Test pipeline for {{ repo_name }} — validates the generator with all optional variables set.
+
+sections:
+  - general_header
+  - contribution_workflow
+  - pull_requests
+  - review
+  - versioning
+  - developer_setup
+  - running_tests
+  - coding_conventions_header
+  - architecture
+  - adding_a_step
+  - channels
+  - parameters
+  - configuration
+  - writing_tests
+  - style
+
+vars:
+  repo_name: genomic-medicine-sweden/test-pipeline
+  repo_url: https://github.com/genomic-medicine-sweden/test-pipeline
+  codespaces_url: https://github.com/genomic-medicine-sweden/test-pipeline/codespaces
+  pre_commit_note: "This repository includes the nf-core pipelines schema docs hook."
+  workflow_file: workflows/test-pipeline.nf
+  reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."
+  modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one."
+
+  pr_title_conventions_section: |
+    #### PR title conventions
+
+    Use a conventional commit prefix: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`.
+
+  nf_test_examples: |
+    Run a specific subworkflow by tag:
+
+    ```bash
+    nf-test test --profile debug,test,docker --tag my_subworkflow
+    ```
+
+  additional_test_notes: |
+    > [!NOTE]
+    > Use the `ci_test` profile when running tests in GitHub Actions to limit resource usage.
+
+  extra_test_notes: "- Use `addParams` to inject test-specific parameter overrides into your nf-test setup block."
+
+  extra_style_notes: "- Use `snake_case` for all local variable and channel names."
+
+custom_sections:
+  - title: Publishing
+    file: test-custom-publishing.md
