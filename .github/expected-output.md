@@ -7,6 +7,7 @@
 Test pipeline for validating the nf-dev-guidelines generator.
 
 ## Table of contents
+
 <!-- START doctoc -->
 <!-- END doctoc -->
 
