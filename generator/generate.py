@@ -127,8 +127,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default="CONTRIBUTING.md",
-        help="Output file path (default: CONTRIBUTING.md)",
+        default="docs/CONTRIBUTING.md",
+        help="Output file path (default: docs/CONTRIBUTING.md)",
     )
     args = parser.parse_args()
 

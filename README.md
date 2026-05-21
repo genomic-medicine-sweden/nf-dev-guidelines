@@ -107,7 +107,7 @@ jobs:
             --config .github/nf-dev-guidelines.yaml \
             --guidelines /tmp/nf-dev-guidelines \
             --repo-root . \
-            --output CONTRIBUTING.md
+            --output docs/CONTRIBUTING.md
 
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
