@@ -73,6 +73,8 @@ Add `.github/workflows/sync-guidelines.yml` to the consuming repository.
 
 > **Required repository setting:** go to **Settings → Actions → General → Workflow permissions** and enable **"Allow GitHub Actions to create and approve pull requests"**. Without this the `create-pull-request` step will fail.
 
+> **Required secret:** the `create-pull-request` action uses a personal access token (PAT) so that the opened PR triggers CI workflows. PRs created with the default `GITHUB_TOKEN` do not trigger other workflows. Create a PAT with the `workflow` scope, then add it to the consuming repository under **Settings → Secrets and variables → Actions** with the name `NF_DEV_GUIDELINES_PAT`.
+
 
 
 ```yaml
@@ -116,6 +118,7 @@ jobs:
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.NF_DEV_GUIDELINES_PAT }}
           commit-message: "docs: update CONTRIBUTING.md from nf-dev-guidelines"
           title: "Update CONTRIBUTING.md from nf-dev-guidelines"
           body: |
