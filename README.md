@@ -73,7 +73,7 @@ Add `.github/workflows/sync-guidelines.yml` to the consuming repository.
 
 > **Required repository setting:** go to **Settings → Actions → General → Workflow permissions** and enable **"Allow GitHub Actions to create and approve pull requests"**. Without this the `create-pull-request` step will fail.
 
-> **Required secret:** the `create-pull-request` action uses a personal access token (PAT) so that the opened PR triggers CI workflows. PRs created with the default `GITHUB_TOKEN` do not trigger other workflows. Create a PAT with the `workflow` scope, then add it to the consuming repository under **Settings → Secrets and variables → Actions** with the name `NF_DEV_GUIDELINES_PAT`.
+> **Required secrets:** the workflow uses the `nf-guidelines-sync-bot` GitHub App to open PRs so that CI is triggered on the resulting PR (PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows). The app must be installed on the consuming repository. Add two secrets under **Settings → Secrets and variables → Actions**: `NF_GUIDELINES_APP_ID` (the numeric app ID) and `NF_GUIDELINES_APP_PRIVATE_KEY` (the PEM private key).
 
 
 
@@ -84,6 +84,10 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 8 * * *" # daily
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -115,16 +119,24 @@ jobs:
       - name: Generate table of contents
         run: npx --yes doctoc --github docs/CONTRIBUTING.md
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.NF_GUIDELINES_APP_ID }}
+          private-key: ${{ secrets.NF_GUIDELINES_APP_PRIVATE_KEY }}
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.NF_DEV_GUIDELINES_PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           commit-message: "docs: update CONTRIBUTING.md from nf-dev-guidelines"
           title: "Update CONTRIBUTING.md from nf-dev-guidelines"
           body: |
             Auto-generated from [nf-dev-guidelines](https://github.com/genomic-medicine-sweden/nf-dev-guidelines).
           branch: update-contributing-guidelines
           delete-branch: true
+
 ```
 
 ### 4. Disable nf-core `template_strings` lint for the generated file
