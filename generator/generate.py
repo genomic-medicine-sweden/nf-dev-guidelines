@@ -14,11 +14,13 @@ REQUIRED_CONFIG_FIELDS = ("title", "intro", "sections")
 
 def load_config(config_path: Path) -> dict:
     with open(config_path) as f:
-        config = yaml.safe_load(f)
+        return yaml.safe_load(f)
+
+
+def validate_config(config: dict, config_path: Path) -> None:
     for field in REQUIRED_CONFIG_FIELDS:
         if field not in config:
             sys.exit(f"ERROR: Missing required field '{field}' in {config_path}")
-    return config
 
 
 def render_string(text: str, template_vars: dict, source_name: str) -> str:
@@ -134,6 +136,7 @@ def main() -> None:
         sys.exit(f"ERROR: Repo root not found: {repo_root}")
 
     config = load_config(config_path)
+    validate_config(config, config_path)
     raw_vars = config.get("vars", {})
     template_vars = {k: v.strip() if isinstance(v, str) else v for k, v in raw_vars.items()}
 
