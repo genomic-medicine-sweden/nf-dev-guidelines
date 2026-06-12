@@ -6,7 +6,6 @@ intro: |
 sections:
   - general
   - coding_conventions
-  - file: .github/test-custom-publishing.md
 
 vars:
   repo_name: genomic-medicine-sweden/test-pipeline
