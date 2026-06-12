@@ -4,6 +4,7 @@
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 import click
 import yaml
@@ -134,8 +135,8 @@ def main(config_path: Path, guidelines_dir: Path, repo_root: Path, output_path: 
 
     config = load_config(config_path)
     validate_config(config, config_path)
-    raw_vars: dict = config.get("vars", {})
-    template_vars: dict = {k: v.strip() if isinstance(v, str) else v for k, v in raw_vars.items()}
+    raw_vars: dict[str, Any] = config.get("vars", {})
+    template_vars: dict[str, Any] = {name: value.strip() if isinstance(value, str) else value for name, value in raw_vars.items()}
 
     intro = render_string(
         config["intro"].strip(),
