@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Generate CONTRIBUTING.md from shared sections and repo-specific config."""
 
-import argparse
 import re
 import sys
 from pathlib import Path
 
+import click
 import yaml
 from jinja2 import BaseLoader, Environment, FileSystemLoader, StrictUndefined, UndefinedError
 
@@ -97,43 +97,40 @@ def render_output(
     )
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Generate CONTRIBUTING.md from shared guidelines and repo config."
-    )
-    parser.add_argument(
-        "--config",
-        required=True,
-        help="Path to the nf-dev-guidelines config file (e.g. assets/nf-dev-guidelines.yaml)",
-    )
-    parser.add_argument(
-        "--guidelines",
-        required=True,
-        help="Path to the nf-dev-guidelines repository root",
-    )
-    parser.add_argument(
-        "--repo-root",
-        default=".",
-        help="Root of the consuming repository; custom section file paths are relative to this (default: CWD)",
-    )
-    parser.add_argument(
-        "--output",
-        default="docs/CONTRIBUTING.md",
-        help="Output file path (default: docs/CONTRIBUTING.md)",
-    )
-    args = parser.parse_args()
-
-    config_path = Path(args.config).resolve()
-    guidelines_dir = Path(args.guidelines).resolve()
-    repo_root = Path(args.repo_root).resolve()
-    output_path = Path(args.output).resolve()
-
-    if not config_path.exists():
-        sys.exit(f"ERROR: Config file not found: {config_path}")
-    if not guidelines_dir.is_dir():
-        sys.exit(f"ERROR: Guidelines directory not found: {guidelines_dir}")
-    if not repo_root.is_dir():
-        sys.exit(f"ERROR: Repo root not found: {repo_root}")
+@click.command()
+@click.option(
+    "--config",
+    "config_path",
+    required=True,
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    help="Path to the nf-dev-guidelines config file (e.g. assets/nf-dev-guidelines.yaml)",
+)
+@click.option(
+    "--guidelines",
+    "guidelines_dir",
+    required=True,
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    help="Path to the nf-dev-guidelines repository root",
+)
+@click.option(
+    "--repo-root",
+    default=".",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    help="Root of the consuming repository; custom section file paths are relative to this (default: CWD)",
+)
+@click.option(
+    "--output",
+    "output_path",
+    default="docs/CONTRIBUTING.md",
+    type=click.Path(dir_okay=False, path_type=Path),
+    help="Output file path (default: docs/CONTRIBUTING.md)",
+)
+def main(config_path: Path, guidelines_dir: Path, repo_root: Path, output_path: Path) -> None:
+    """Generate CONTRIBUTING.md from shared guidelines and repo config."""
+    config_path = config_path.resolve()
+    guidelines_dir = guidelines_dir.resolve()
+    repo_root = repo_root.resolve()
+    output_path = output_path.resolve()
 
     config = load_config(config_path)
     validate_config(config, config_path)
