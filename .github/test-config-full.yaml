@@ -4,20 +4,8 @@ intro: |
   Test pipeline for {{ repo_name }} — validates the generator with all optional variables set.
 
 sections:
-  - contribution_workflow
-  - pull_requests
-  - review
-  - versioning
-  - developer_setup
-  - running_tests
-  - coding_conventions_header
-  - architecture
-  - adding_a_step
-  - channels
-  - parameters
-  - configuration
-  - writing_tests
-  - style
+  - general
+  - coding_conventions
   - file: .github/test-custom-publishing.md
 
 vars:
