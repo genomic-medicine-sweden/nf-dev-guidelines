@@ -139,8 +139,8 @@ def main(config_path: Path, guidelines_dir: Path, repo_root: Path, output_path: 
     template_vars: dict[str, Any] = {name: value.strip() if isinstance(value, str) else value for name, value in raw_vars.items()}
 
     intro = render_string(
-        config["intro"].strip(),
-        template_vars,
+        text=config["intro"].strip(),
+        template_vars=template_vars,
         source_name="intro field in config",
     )
 
@@ -151,7 +151,12 @@ def main(config_path: Path, guidelines_dir: Path, repo_root: Path, output_path: 
         template_vars=template_vars,
     )
 
-    output = render_output(guidelines_dir, config, intro, rendered_sections)
+    output = render_output(
+        guidelines_dir=guidelines_dir,
+        config=config,
+        intro=intro,
+        rendered_sections=rendered_sections,
+    )
     output = re.sub(r"\n{3,}", "\n\n", output).rstrip("\n") + "\n"
     output_path.write_text(output)
     print(f"Generated {output_path}")
