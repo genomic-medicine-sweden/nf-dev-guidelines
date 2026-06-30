@@ -117,7 +117,7 @@ class Config:
     type=click.Path(dir_okay=False, path_type=Path),
     help="Output file path (default: docs/CONTRIBUTING.md)",
 )
-def main(config_path: Path, guidelines_dir: Path, repo_root: Path, output_path: Path) -> None:
+def main(config_path: click.Path, guidelines_dir: click.Path, repo_root: click.Path, output_path: click.Path) -> None:
     """Generate CONTRIBUTING.md from shared guidelines and repo config."""
     config = Config(
         config_path=config_path.resolve(),
