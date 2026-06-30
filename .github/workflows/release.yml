@@ -1,0 +1,12 @@
+name: Create Release
+on:
+  push:
+    branches: [main]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: basnijholt/calver-auto-release@v1
+        id: release
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
