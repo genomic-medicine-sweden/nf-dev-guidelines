@@ -120,11 +120,11 @@ class Config:
 def main(config_path: click.Path, guidelines_dir: click.Path, repo_root: click.Path, output_path: click.Path) -> None:
     """Generate CONTRIBUTING.md from shared guidelines and repo config."""
     config = Config(
-        config_path=config_path.resolve(),
-        guidelines_dir=guidelines_dir.resolve(),
-        repo_root=repo_root.resolve(),
+        config_path=Path(config_path),
+        guidelines_dir=Path(guidelines_dir),
+        repo_root=Path(repo_root),
     )
-    output_path = output_path.resolve()
+    output_path = Path(output_path)
     output_path.write_text(config.to_string())
     print(f"Generated {output_path}")
 
