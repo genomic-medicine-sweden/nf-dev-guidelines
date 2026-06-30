@@ -35,20 +35,8 @@ intro: |
   My pipeline does X, Y, Z.
 
 sections:
-  - contribution_workflow
-  - pull_requests
-  - review
-  - versioning
-  - developer_setup
-  - running_tests
-  - coding_conventions_header
-  - architecture
-  - adding_a_step
-  - channels
-  - parameters
-  - configuration
-  - writing_tests
-  - style
+  - general
+  - coding_conventions
 
 vars:
   repo_name: my-org/my-pipeline
