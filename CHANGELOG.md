@@ -15,3 +15,4 @@
 - `.github/test-config.yaml` / `.github/test-config-full.yaml` — Minimal and full test configs used by CI. [#1](https://github.com/genomic-medicine-sweden/nf-dev-guidelines/pull/1)
 - `.github/expected-output.md` — Golden file for CI diff validation. [#1](https://github.com/genomic-medicine-sweden/nf-dev-guidelines/pull/1)
 - `.github/CODEOWNERS` — Code ownership configuration. [#1](https://github.com/genomic-medicine-sweden/nf-dev-guidelines/pull/1)
+- Automatic calendar versioning releases [#6](https://github.com/genomic-medicine-sweden/nf-dev-guidelines/pull/6)
