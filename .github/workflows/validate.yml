@@ -1,0 +1,71 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check generator syntax
+        run: python -m py_compile generator/generate.py
+
+      - name: Generate with default test config
+        run: |
+          python generator/generate.py \
+            --config .github/test-config.yaml \
+            --guidelines . \
+            --repo-root . \
+            --output /tmp/CONTRIBUTING_test.md
+
+      - name: Check output matches golden file
+        run: |
+          diff .github/expected-output.md /tmp/CONTRIBUTING_test.md || \
+            (echo "Output differs from expected. Run 'make generate-golden' locally to update." && exit 1)
+
+      - name: Generate with full test config (all optional vars)
+        run: |
+          python generator/generate.py \
+            --config .github/test-config-full.yaml \
+            --guidelines . \
+            --repo-root . \
+            --output /tmp/CONTRIBUTING_test_full.md
+
+      - name: Lint both outputs
+        run: |
+          python3 - <<'EOF'
+          import re, sys
+
+          files = {
+              "default config": "/tmp/CONTRIBUTING_test.md",
+              "full config": "/tmp/CONTRIBUTING_test_full.md",
+          }
+          failed = False
+          for label, path in files.items():
+              text = open(path).read()
+              if re.search(r"\n{3,}", text):
+                  print(f"FAIL [{label}]: 3+ consecutive blank lines found")
+                  failed = True
+              if "{{" in text or "}}" in text:
+                  print(f"FAIL [{label}]: unrendered Jinja2 markers found")
+                  failed = True
+              trailing = len(text) - len(text.rstrip("\n"))
+              if trailing != 1:
+                  print(f"FAIL [{label}]: ends with {trailing} trailing newline(s), expected 1")
+                  failed = True
+              if not failed:
+                  print(f"OK   [{label}]: {len(text.splitlines())} lines — passes all checks")
+          sys.exit(1 if failed else 0)
+          EOF
