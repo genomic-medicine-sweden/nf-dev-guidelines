@@ -35,6 +35,7 @@ Be positive and constructive in your review, and whenever possible offer suggest
 #### Semantic versioning and changelog
 
 Release versioning is maintained according to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and a changelog is maintained according to the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format. Although, for a Nextflow pipeline it can be hard to decide what is a breaking/non-breaking API change.
+
 {% if extra_semantic_versioning_notes | default('') %}
 {{ extra_semantic_versioning_notes }}
 
