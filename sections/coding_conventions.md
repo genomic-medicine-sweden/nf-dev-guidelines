@@ -55,14 +55,14 @@ If you wish to contribute a new step, please use the following coding standards:
 
   ```groovy
   take:
-    ch_vcf                // channel: [mandatory] [ val(meta), path(vcf) ]
-    ch_reduced_penetrance // channel: [optional]  [ path(penetrance) ]
-    val_aligner           // string:  [mandatory] aligner name (bwa/bwamem2/bwameme)
-    process_with_sort     // Boolean
+  ch_vcf                // channel: [mandatory] [ val(meta), path(vcf) ]
+  ch_reduced_penetrance // channel: [optional]  [ path(penetrance) ]
+  val_aligner           // string:  [mandatory] aligner name (bwa/bwamem2/bwameme)
+  process_with_sort     // Boolean
 
   emit:
-    vcf     = ch_vcf      // channel: [ val(meta), path(vcf) ]
-    publish = ch_publish  // channel: [ val(destination), val(value) ]
+  vcf     = ch_vcf      // channel: [ val(meta), path(vcf) ]
+  publish = ch_publish  // channel: [ val(destination), val(value) ]
   ```
 
 - Use `ch_* = <...>` to declare a new channel. Avoid using `.set { ch_* }`.
