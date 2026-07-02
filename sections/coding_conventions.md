@@ -27,11 +27,17 @@ If you wish to contribute a new step, please use the following coding standards:
 ### Channels
 
 - **Conditional channels**: always initialize to `channel.empty()` before any `if` block that may or may not assign them. Never leave a channel potentially undefined.
+{% if naming_conventions | default('') %}
+{{ naming_conventions }}
+{% endif %}
 
 ### Parameters
 
 - `params` must only be accessed in the main unnamed workflow (`workflow` in `main.nf`). Subworkflows and named workflows receive all values as explicit `val_*` arguments. Never reference `params` directly inside a subworkflow.
 - Parameters should be initialised/defined with default values within the `params` scope in `nextflow.config`. Don't hardcode values that a user might reasonably want to change. Once added, run `nf-core pipelines schema build` to register them in `nextflow_schema.json`.
+{% if publishing | default('') %}
+{{ publishing }}
+{% endif %}
 
 ### Configuration
 
@@ -39,6 +45,9 @@ If you wish to contribute a new step, please use the following coding standards:
 - Use module configs strictly for defining `ext.args`, `ext.args2`, and `ext.prefix`. Do not place complex decision-making, conditions or workflow behaviour logic there.
 - Conditional behavior (e.g. save as CRAM vs BAM) should be handled in the subworkflow — not via config-level flags.
 - Process resource requirements (CPUs / memory / time) go in `conf/base.config` using `withLabel:` selectors so they can be shared across processes. Use `${task.cpus}` and `${task.memory}` in `script:` blocks to apply them dynamically.
+{% if extra_configuration_notes | default('') %}
+{{ extra_configuration_notes }}
+{% endif %}
 
 ### Writing tests
 
