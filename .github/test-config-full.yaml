@@ -6,6 +6,7 @@ intro: |
 sections:
   - general
   - coding_conventions
+  - updating_contribution_guidelines
 
 vars:
   repo_name: genomic-medicine-sweden/test-pipeline
