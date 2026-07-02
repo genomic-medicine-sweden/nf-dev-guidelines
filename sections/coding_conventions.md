@@ -27,7 +27,6 @@ If you wish to contribute a new step, please use the following coding standards:
 ### Channels
 
 - **Conditional channels**: always initialize to `channel.empty()` before any `if` block that may or may not assign them. Never leave a channel potentially undefined.
-
 {% if naming_conventions | default('') %}
 {{ naming_conventions }}
 {% endif %}
