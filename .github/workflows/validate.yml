@@ -43,6 +43,18 @@ jobs:
             --repo-root . \
             --output /tmp/CONTRIBUTING_test_full.md
 
+      - name: Generate with a removed/unknown section (should warn, not fail)
+        run: |
+          python generator/generate.py \
+            --config .github/test-config-missing-section.yaml \
+            --guidelines . \
+            --repo-root . \
+            --output /tmp/CONTRIBUTING_test_missing_section.md 2> /tmp/missing_section_stderr.txt
+          grep -q "WARNING: Section 'this_section_was_removed_upstream' not found" /tmp/missing_section_stderr.txt || \
+            (echo "Expected warning about missing section was not printed" && exit 1)
+          grep -q "this_section_was_removed_upstream" /tmp/CONTRIBUTING_test_missing_section.md && \
+            (echo "Missing section should not appear in generated output" && exit 1) || true
+
       - name: Lint both outputs
         run: |
           python3 - <<'EOF'
