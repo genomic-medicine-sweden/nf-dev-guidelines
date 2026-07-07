@@ -42,20 +42,16 @@ class Config:
         }
 
     def _resolve_sections(self, config_path: Path) -> list:
-        explicit = self._dict.get("sections")
+        if "sections" in self._dict:
+            sys.exit(
+                f"ERROR: {config_path} sets 'sections', which is no longer supported. Every consuming "
+                "repo now gets all of DEFAULT_SECTIONS by default. Use 'exclude_sections:' to drop "
+                "specific ones and 'custom_sections:' (with 'after:'/'before:' anchors) to interleave "
+                "pipeline-specific content. See the nf-dev-guidelines README."
+            )
+
         exclude = self._dict.get("exclude_sections")
         custom = self._dict.get("custom_sections")
-
-        if explicit is not None:
-            if exclude is not None or custom is not None:
-                sys.exit(
-                    f"ERROR: {config_path} sets 'sections' together with 'exclude_sections' or "
-                    "'custom_sections'. Those only apply when 'sections' is omitted, so that custom "
-                    "sections can be anchored relative to the default section set. With an explicit "
-                    "'sections' list you already control ordering directly — interleave 'file:' entries "
-                    "in it instead."
-                )
-            return explicit
 
         excluded = set(exclude or [])
         unknown_excludes = excluded - set(DEFAULT_SECTIONS)

@@ -3,11 +3,6 @@ title: Test Pipeline Contributing Guide (full)
 intro: |
   Test pipeline for {{ repo_name }} — validates the generator with all optional variables set.
 
-sections:
-  - general
-  - coding_conventions
-  - updating_contribution_guidelines
-
 vars:
   repo_name: genomic-medicine-sweden/test-pipeline
   repo_url: https://github.com/genomic-medicine-sweden/test-pipeline

@@ -26,9 +26,7 @@ nf-dev-guidelines/
 
 ### 1. Add `assets/nf-dev-guidelines.yaml`
 
-Create this file in the consuming repository. There are two ways to choose which shared sections you get, and you pick one per repo:
-
-**Default sections (recommended)** — omit `sections:` entirely. You automatically get every section in [`sections/`](sections/), in the canonical order defined by `DEFAULT_SECTIONS` in [`generator/generate.py`](generator/generate.py). This means a newly added shared section reaches your repo on the next sync with no config change. Use `exclude_sections:` to opt out of specific ones, and `custom_sections:` to interleave your own pipeline-specific sections at a precise point, anchored to a default section name via `after:`/`before:` (omit both to append at the end):
+Create this file in the consuming repository. You automatically get every section in [`sections/`](sections/), in the canonical order defined by `DEFAULT_SECTIONS` in [`generator/generate.py`](generator/generate.py) — this means a newly added shared section reaches your repo on the next sync with no config change. Use `exclude_sections:` to opt out of specific ones, and `custom_sections:` to interleave your own pipeline-specific sections at a precise point, anchored to a default section name via `after:`/`before:` (omit both to append at the end):
 
 ```yaml
 title: My Pipeline Contributing Guide
@@ -55,19 +53,11 @@ vars:
   modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one. Only add to modules/local/ as a last resort when the use case is too pipeline-specific."
 ```
 
-**Explicit sections** — set `sections:` to a full list naming every shared and custom section, in order. You have complete manual control, but a newly added shared section is invisible until you add its name to this list yourself. `sections:` cannot be combined with `exclude_sections:`/`custom_sections:` — with an explicit list you already control placement directly, so interleave `file:` entries in it instead:
-
-```yaml
-sections:
-  - general
-  - file: contributing/gpu.md
-  - coding_conventions
-  - file: contributing/publishing.md
-```
+There is no way to fully hand-write the section list anymore — a bare `sections:` key is a hard error. This keeps every consuming repo receiving new shared sections automatically; if you need a section excluded or custom content placed at a specific point, use `exclude_sections:`/`custom_sections:` above.
 
 ### 2. Add pipeline-specific section files
 
-Create any files referenced as `file:` entries (in `sections:` or `custom_sections:`). Each file is rendered as a Jinja2 template with the same `vars:` available to the shared sections, and is inserted as-is at that position in the document — so, unlike the shared sections in `sections/`, it must include its own markdown heading.
+Create any files referenced as `file:` entries in `custom_sections:`. Each file is rendered as a Jinja2 template with the same `vars:` available to the shared sections, and is inserted as-is at that position in the document — so, unlike the shared sections in `sections/`, it must include its own markdown heading.
 
 ### 3. Add the sync workflow
 
@@ -184,7 +174,7 @@ Variables are passed via `vars:` in `repo-config.yaml` and are available to all 
 1. Create `sections/<name>.md` — a Jinja2 template starting with the appropriate markdown heading.
 2. Add `<name>` to `DEFAULT_SECTIONS` in [`generator/generate.py`](generator/generate.py), in the position it should appear by default.
 3. Update `sections/` variable documentation in this README if it introduces new template variables.
-4. Merge to `main`. Consuming repos using the default sections mode (no explicit `sections:` in their config) get it automatically on their next sync. Repos using an explicit `sections:` list won't render it until they add `<name>` themselves.
+4. Merge to `main`. Every consuming repo gets it automatically on their next sync — there's no opt-in list to update per repo.
 
 ## Removing a shared section
 

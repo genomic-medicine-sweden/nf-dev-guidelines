@@ -68,17 +68,76 @@ jobs:
           print("OK: default sections + custom_sections anchoring produced the expected order")
           EOF
 
-      - name: Generate with a removed/unknown section (should warn, not fail)
+      - name: A stale DEFAULT_SECTIONS entry should warn, not fail
         run: |
-          python generator/generate.py \
-            --config .github/test-config-missing-section.yaml \
-            --guidelines . \
-            --repo-root . \
-            --output /tmp/CONTRIBUTING_test_missing_section.md 2> /tmp/missing_section_stderr.txt
-          grep -q "WARNING: Section 'this_section_was_removed_upstream' not found" /tmp/missing_section_stderr.txt || \
-            (echo "Expected warning about missing section was not printed" && exit 1)
-          grep -q "this_section_was_removed_upstream" /tmp/CONTRIBUTING_test_missing_section.md && \
-            (echo "Missing section should not appear in generated output" && exit 1) || true
+          python3 - <<'EOF'
+          import io
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, "generator")
+          import generate
+
+          # Simulates a maintainer deleting sections/<name>.md without updating
+          # DEFAULT_SECTIONS: every consuming repo should still generate cleanly.
+          generate.DEFAULT_SECTIONS.append("this_section_was_removed_upstream")
+
+          config_path = Path("/tmp/stale-default-section-config.yaml")
+          config_path.write_text(
+              "title: Stale DEFAULT_SECTIONS test\n"
+              "intro: \"Testing a stale DEFAULT_SECTIONS entry.\"\n"
+              "vars:\n"
+              "  repo_name: x\n"
+              "  repo_url: x\n"
+              "  codespaces_url: x\n"
+              "  pre_commit_note: x\n"
+              "  workflow_file: x\n"
+              "  reuse_note: x\n"
+              "  modules_note: x\n"
+          )
+
+          captured_stderr = io.StringIO()
+          real_stderr, sys.stderr = sys.stderr, captured_stderr
+          try:
+              config = generate.Config(config_path=config_path, guidelines_dir=Path("."), repo_root=Path("."))
+              output = config.to_string()
+          finally:
+              sys.stderr = real_stderr
+
+          warning = captured_stderr.getvalue()
+          if "WARNING: Section 'this_section_was_removed_upstream' not found" not in warning:
+              raise SystemExit(f"Expected warning not printed. stderr was:\n{warning}")
+          if "this_section_was_removed_upstream" in output:
+              raise SystemExit("Missing section should not appear in generated output")
+          print("OK: a stale DEFAULT_SECTIONS entry warns and is skipped, generation still succeeds")
+          EOF
+
+      - name: A 'sections:' key should now be a hard error
+        run: |
+          python3 - <<'EOF'
+          import pathlib
+          import subprocess
+          import tempfile
+
+          config_path = pathlib.Path(tempfile.mktemp(suffix=".yaml"))
+          config_path.write_text("title: x\nsections:\n  - general\n")
+          result = subprocess.run(
+              [
+                  "python", "generator/generate.py",
+                  "--config", str(config_path),
+                  "--guidelines", ".",
+                  "--repo-root", ".",
+                  "--output", "/tmp/should-not-exist.md",
+              ],
+              capture_output=True,
+              text=True,
+          )
+          if result.returncode == 0:
+              raise SystemExit("Expected generate.py to fail when 'sections:' is set, but it succeeded")
+          if "no longer supported" not in result.stderr:
+              raise SystemExit(f"Expected a clear rejection message, got:\n{result.stderr}")
+          print("OK: 'sections:' is correctly rejected with a clear error")
+          EOF
 
       - name: Lint both outputs
         run: |
