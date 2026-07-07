@@ -1,0 +1,77 @@
+name: Sync guidelines (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      config-path:
+        description: "Path to the nf-dev-guidelines config file in the consuming repo"
+        type: string
+        default: assets/nf-dev-guidelines.yaml
+      output-path:
+        description: "Where to write the generated CONTRIBUTING.md in the consuming repo"
+        type: string
+        default: docs/CONTRIBUTING.md
+      guidelines-ref:
+        description: "Branch/tag of genomic-medicine-sweden/nf-dev-guidelines to sync from"
+        type: string
+        default: main
+    secrets:
+      NF_GUIDELINES_APP_ID:
+        description: "App ID of the nf-guidelines-sync-bot GitHub App (used so the resulting PR triggers other CI)"
+        required: true
+      NF_GUIDELINES_APP_PRIVATE_KEY:
+        description: "Private key (PEM) of the nf-guidelines-sync-bot GitHub App"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout consuming repository
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Clone nf-dev-guidelines
+        run: |
+          git clone --depth 1 --branch "${{ inputs.guidelines-ref }}" \
+            https://github.com/genomic-medicine-sweden/nf-dev-guidelines.git \
+            /tmp/nf-dev-guidelines
+
+      - name: Install dependencies
+        run: pip install -r /tmp/nf-dev-guidelines/requirements.txt
+
+      - name: Generate CONTRIBUTING.md
+        run: |
+          python /tmp/nf-dev-guidelines/generator/generate.py \
+            --config "${{ inputs.config-path }}" \
+            --guidelines /tmp/nf-dev-guidelines \
+            --repo-root . \
+            --output "${{ inputs.output-path }}"
+
+      - name: Generate table of contents
+        run: npx --yes doctoc --github "${{ inputs.output-path }}"
+
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.NF_GUIDELINES_APP_ID }}
+          private-key: ${{ secrets.NF_GUIDELINES_APP_PRIVATE_KEY }}
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "docs: update CONTRIBUTING.md from nf-dev-guidelines"
+          title: "Update CONTRIBUTING.md from nf-dev-guidelines"
+          body: |
+            Auto-generated from [nf-dev-guidelines](https://github.com/genomic-medicine-sweden/nf-dev-guidelines).
+          branch: update-contributing-guidelines
+          delete-branch: true

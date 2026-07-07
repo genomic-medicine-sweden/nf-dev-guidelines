@@ -57,13 +57,11 @@ Create any files referenced in `custom_sections`. Each file contains the section
 
 ### 3. Add the sync workflow
 
-Add `.github/workflows/sync-guidelines.yml` to the consuming repository.
+Add `.github/workflows/sync-guidelines.yml` to the consuming repository. This calls the [reusable workflow](.github/workflows/sync.yml) hosted in this repo, so the actual sync logic lives here — future improvements (bugfixes, new steps) reach every consuming repository automatically, with no changes needed on their side.
 
 > **Required repository setting:** go to **Settings → Actions → General → Workflow permissions** and enable **"Allow GitHub Actions to create and approve pull requests"**. Without this the `create-pull-request` step will fail.
 
-> **Required secrets:** the workflow uses the `nf-guidelines-sync-bot` GitHub App to open PRs so that CI is triggered on the resulting PR (PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows). The app must be installed on the consuming repository. Add two secrets under **Settings → Secrets and variables → Actions**: `NF_GUIDELINES_APP_ID` (the numeric app ID) and `NF_GUIDELINES_APP_PRIVATE_KEY` (the PEM private key).
-
-
+> **Required secrets:** the workflow uses the `nf-guidelines-sync-bot` GitHub App to open PRs so that CI is triggered on the resulting PR (PRs opened with the default `GITHUB_TOKEN` do not trigger other workflows). The app must be installed on the consuming repository. Add two secrets under **Settings → Secrets and variables → Actions**: `NF_GUIDELINES_APP_ID` (the numeric app ID) and `NF_GUIDELINES_APP_PRIVATE_KEY` (the PEM private key), then pass them on with `secrets: inherit` as shown below.
 
 ```yaml
 name: Sync guidelines
@@ -73,58 +71,20 @@ on:
   schedule:
     - cron: "0 8 * * *" # daily
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   sync:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    uses: genomic-medicine-sweden/nf-dev-guidelines/.github/workflows/sync.yml@main
+    secrets: inherit
+```
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+Only needed if your repo doesn't use the defaults (`assets/nf-dev-guidelines.yaml` and `docs/CONTRIBUTING.md`):
 
-      - name: Clone nf-dev-guidelines
-        run: |
-          git clone --depth 1 --branch main \
-            https://github.com/genomic-medicine-sweden/nf-dev-guidelines.git \
-            /tmp/nf-dev-guidelines
-
-      - name: Install dependencies
-        run: pip install -r /tmp/nf-dev-guidelines/requirements.txt
-
-      - name: Generate CONTRIBUTING.md
-        run: |
-          python /tmp/nf-dev-guidelines/generator/generate.py \
-            --config assets/nf-dev-guidelines.yaml \
-            --guidelines /tmp/nf-dev-guidelines \
-            --repo-root . \
-            --output docs/CONTRIBUTING.md
-
-      - name: Generate table of contents
-        run: npx --yes doctoc --github docs/CONTRIBUTING.md
-
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.NF_GUIDELINES_APP_ID }}
-          private-key: ${{ secrets.NF_GUIDELINES_APP_PRIVATE_KEY }}
-
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          commit-message: "docs: update CONTRIBUTING.md from nf-dev-guidelines"
-          title: "Update CONTRIBUTING.md from nf-dev-guidelines"
-          body: |
-            Auto-generated from [nf-dev-guidelines](https://github.com/genomic-medicine-sweden/nf-dev-guidelines).
-          branch: update-contributing-guidelines
-          delete-branch: true
-
+```yaml
+    uses: genomic-medicine-sweden/nf-dev-guidelines/.github/workflows/sync.yml@main
+    with:
+      config-path: assets/nf-dev-guidelines.yaml
+      output-path: docs/CONTRIBUTING.md
+    secrets: inherit
 ```
 
 ### 4. Disable nf-core `template_strings` lint for the generated file
