@@ -17,6 +17,11 @@ _JINJA_DEFAULTS: dict[str, Any] = dict(
     lstrip_blocks=True,
 )
 
+# Canonical order used when a consuming repo's config omits 'sections:'. Keep in sync
+# with sections/*.md — appending a name here is what makes a new shared section reach
+# every consuming repo on its next sync without them touching their config.
+DEFAULT_SECTIONS: list[str] = ["general", "coding_conventions", "updating_contribution_guidelines"]
+
 
 class Config:
     def __init__(self, config_path: Path, guidelines_dir: Path, repo_root: Path):
@@ -26,16 +31,79 @@ class Config:
         with open(config_path) as f:
             self._dict = yaml.safe_load(f)
 
-        for field in ("title", "sections"):
-            if field not in self._dict:
-                sys.exit(f"ERROR: Missing required field '{field}' in {config_path}")
+        if "title" not in self._dict:
+            sys.exit(f"ERROR: Missing required field 'title' in {config_path}")
 
         self.title: str = self._dict["title"]
-        self.sections: list = self._dict["sections"]
+        self.sections: list = self._resolve_sections(config_path)
         self.variables: dict[str, Any] = {
             name: value.strip() if isinstance(value, str) else value
             for name, value in self._dict.get("vars", {}).items()
         }
+
+    def _resolve_sections(self, config_path: Path) -> list:
+        explicit = self._dict.get("sections")
+        exclude = self._dict.get("exclude_sections")
+        custom = self._dict.get("custom_sections")
+
+        if explicit is not None:
+            if exclude is not None or custom is not None:
+                sys.exit(
+                    f"ERROR: {config_path} sets 'sections' together with 'exclude_sections' or "
+                    "'custom_sections'. Those only apply when 'sections' is omitted, so that custom "
+                    "sections can be anchored relative to the default section set. With an explicit "
+                    "'sections' list you already control ordering directly — interleave 'file:' entries "
+                    "in it instead."
+                )
+            return explicit
+
+        excluded = set(exclude or [])
+        unknown_excludes = excluded - set(DEFAULT_SECTIONS)
+        if unknown_excludes:
+            print(
+                f"WARNING: exclude_sections in {config_path} references unknown section(s): "
+                f"{sorted(unknown_excludes)}",
+                file=sys.stderr,
+            )
+
+        base = [name for name in DEFAULT_SECTIONS if name not in excluded]
+        return self._insert_custom_sections(base, custom or [])
+
+    @staticmethod
+    def _insert_custom_sections(base: list[str], custom: list[dict]) -> list:
+        """Interleave custom_sections into base, anchored via 'after'/'before' a default section name."""
+        insertions: list[tuple[int, dict]] = []
+        for entry in custom:
+            file_rel = entry.get("file")
+            if not file_rel:
+                sys.exit(f"ERROR: custom_sections entry missing 'file': {entry}")
+            after, before = entry.get("after"), entry.get("before")
+            if after is not None and before is not None:
+                sys.exit(f"ERROR: custom_sections entry for '{file_rel}' sets both 'after' and 'before'")
+            if after is not None:
+                if after not in base:
+                    sys.exit(
+                        f"ERROR: custom_sections entry for '{file_rel}' references unknown 'after: {after}' "
+                        f"(available: {base})"
+                    )
+                index = base.index(after) + 1
+            elif before is not None:
+                if before not in base:
+                    sys.exit(
+                        f"ERROR: custom_sections entry for '{file_rel}' references unknown 'before: {before}' "
+                        f"(available: {base})"
+                    )
+                index = base.index(before)
+            else:
+                index = len(base)
+            insertions.append((index, {"file": file_rel}))
+
+        result: list = list(base)
+        offset = 0
+        for index, item in sorted(insertions, key=lambda pair: pair[0]):
+            result.insert(index + offset, item)
+            offset += 1
+        return result
 
     def _render_string(self, text: str, source_name: str) -> str:
         env = Environment(loader=BaseLoader(), **_JINJA_DEFAULTS)

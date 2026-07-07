@@ -1,0 +1,21 @@
+title: Test Pipeline Contributing Guide (default sections)
+
+intro: |
+  Test pipeline for validating default-mode section ordering (no explicit 'sections:').
+
+# 'sections:' is intentionally omitted — this exercises the default section set
+# (DEFAULT_SECTIONS in generator/generate.py) plus custom_sections anchoring.
+custom_sections:
+  - file: .github/fixtures/custom_after_general.md
+    after: general
+  - file: .github/fixtures/custom_before_updating.md
+    before: updating_contribution_guidelines
+
+vars:
+  repo_name: genomic-medicine-sweden/test-pipeline
+  repo_url: https://github.com/genomic-medicine-sweden/test-pipeline
+  codespaces_url: https://github.com/genomic-medicine-sweden/test-pipeline/codespaces
+  pre_commit_note: "This repository includes the nf-core pipelines schema docs hook."
+  workflow_file: workflows/test-pipeline.nf
+  reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."
+  modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one."

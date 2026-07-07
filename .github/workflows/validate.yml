@@ -43,6 +43,31 @@ jobs:
             --repo-root . \
             --output /tmp/CONTRIBUTING_test_full.md
 
+      - name: Generate with default sections + custom_sections anchoring
+        run: |
+          python generator/generate.py \
+            --config .github/test-config-default-sections.yaml \
+            --guidelines . \
+            --repo-root . \
+            --output /tmp/CONTRIBUTING_test_default_sections.md
+          python3 - <<'EOF'
+          headings = [
+              "## General",
+              "#### A custom section anchored after general",
+              "## Coding conventions",
+              "#### A custom section anchored before updating_contribution_guidelines",
+              "## Updating contribution guidelines",
+          ]
+          text = open("/tmp/CONTRIBUTING_test_default_sections.md").read()
+          positions = [text.find(h) for h in headings]
+          if any(p == -1 for p in positions):
+              missing = [h for h, p in zip(headings, positions) if p == -1]
+              raise SystemExit(f"Missing expected heading(s): {missing}")
+          if positions != sorted(positions):
+              raise SystemExit(f"Headings out of order: {list(zip(headings, positions))}")
+          print("OK: default sections + custom_sections anchoring produced the expected order")
+          EOF
+
       - name: Generate with a removed/unknown section (should warn, not fail)
         run: |
           python generator/generate.py \
