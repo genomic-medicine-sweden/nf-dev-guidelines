@@ -37,6 +37,8 @@ intro: |
 sections:
   - general
   - coding_conventions
+  - file: contributing/publishing.md
+  - file: contributing/gpu.md
 
 vars:
   repo_name: my-org/my-pipeline
@@ -46,14 +48,11 @@ vars:
   workflow_file: workflows/my-pipeline.nf
   reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."
   modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one. Only add to modules/local/ as a last resort when the use case is too pipeline-specific."
-
-  - file: contributing/publishing.md
-  - file: contributing/gpu.md
 ```
 
 ### 2. Add pipeline-specific section files
 
-Create any files referenced in `custom_sections`. Each file contains the section body without a heading (the `## Title` is added by the template from `custom_sections[].title`).
+Create any files referenced as `file:` entries in `sections:` (e.g. `contributing/publishing.md` above). Each file is rendered as a Jinja2 template with the same `vars:` available to the shared sections, and is inserted as-is at that position in the document — so, unlike the shared sections in `sections/`, it must include its own markdown heading.
 
 ### 3. Add the sync workflow
 
