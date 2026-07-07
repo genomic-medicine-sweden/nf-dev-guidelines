@@ -78,17 +78,23 @@ class Config:
                 sys.exit(f"ERROR: custom_sections entry for '{file_rel}' sets both 'after' and 'before'")
             if after is not None:
                 if after not in base:
-                    sys.exit(
-                        f"ERROR: custom_sections entry for '{file_rel}' references unknown 'after: {after}' "
-                        f"(available: {base})"
+                    print(
+                        f"WARNING: custom_sections entry for '{file_rel}' references 'after: {after}', which "
+                        "isn't a current default section (removed or excluded?) — skipping this custom section. "
+                        f"Update its anchor in your config. (available: {base})",
+                        file=sys.stderr,
                     )
+                    continue
                 index = base.index(after) + 1
             elif before is not None:
                 if before not in base:
-                    sys.exit(
-                        f"ERROR: custom_sections entry for '{file_rel}' references unknown 'before: {before}' "
-                        f"(available: {base})"
+                    print(
+                        f"WARNING: custom_sections entry for '{file_rel}' references 'before: {before}', which "
+                        "isn't a current default section (removed or excluded?) — skipping this custom section. "
+                        f"Update its anchor in your config. (available: {base})",
+                        file=sys.stderr,
                     )
+                    continue
                 index = base.index(before)
             else:
                 index = len(base)

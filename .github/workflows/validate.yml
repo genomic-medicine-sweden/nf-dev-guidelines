@@ -112,6 +112,56 @@ jobs:
           print("OK: a stale DEFAULT_SECTIONS entry warns and is skipped, generation still succeeds")
           EOF
 
+      - name: A custom_sections anchor pointing at a removed/excluded section should warn, not fail
+        run: |
+          python3 - <<'EOF'
+          import io
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, "generator")
+          import generate
+
+          # Simulates a default section a custom_sections entry anchors to being removed
+          # from DEFAULT_SECTIONS (or excluded locally): the sync must still succeed.
+          generate.DEFAULT_SECTIONS.remove("coding_conventions")
+
+          custom_section_path = Path("/tmp/orphaned-custom-section.md")
+          custom_section_path.write_text("#### Orphaned custom section\n\nShould be skipped, not crash.\n")
+
+          config_path = Path("/tmp/orphaned-anchor-config.yaml")
+          config_path.write_text(
+              "title: Orphaned anchor test\n"
+              "intro: \"Testing a custom_sections anchor whose target no longer exists.\"\n"
+              "custom_sections:\n"
+              f"  - file: {custom_section_path}\n"
+              "    after: coding_conventions\n"
+              "vars:\n"
+              "  repo_name: x\n"
+              "  repo_url: x\n"
+              "  codespaces_url: x\n"
+              "  pre_commit_note: x\n"
+              "  workflow_file: x\n"
+              "  reuse_note: x\n"
+              "  modules_note: x\n"
+          )
+
+          captured_stderr = io.StringIO()
+          real_stderr, sys.stderr = sys.stderr, captured_stderr
+          try:
+              config = generate.Config(config_path=config_path, guidelines_dir=Path("."), repo_root=Path("."))
+              output = config.to_string()
+          finally:
+              sys.stderr = real_stderr
+
+          warning = captured_stderr.getvalue()
+          if "WARNING" not in warning or "after: coding_conventions" not in warning:
+              raise SystemExit(f"Expected a warning about the orphaned anchor. stderr was:\n{warning}")
+          if "Orphaned custom section" in output:
+              raise SystemExit("Custom section with an orphaned anchor should not appear in generated output")
+          print("OK: an orphaned custom_sections anchor warns and is skipped, generation still succeeds")
+          EOF
+
       - name: A 'sections:' key should now be a hard error
         run: |
           python3 - <<'EOF'

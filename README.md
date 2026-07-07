@@ -178,4 +178,6 @@ Variables are passed via `vars:` in `repo-config.yaml` and are available to all 
 
 ## Removing a shared section
 
-Deleting a `sections/*.md` file that a consuming repository still references in `sections:` does not break their sync workflow: the generator prints a warning to stderr, skips the section, and still generates the rest of the document, so the daily sync PR opens as usual. Reviewing that PR's diff (the section's content disappearing) is the signal for the pipeline maintainer to remove the stale entry from their `sections:` list.
+1. Delete `sections/<name>.md`.
+2. Remove `<name>` from `DEFAULT_SECTIONS` in `generator/generate.py` in the same change. If you forget, every consuming repo still generates fine — the generator prints a warning to stderr, skips the section, and generates the rest of the document, so the daily sync PR opens as usual instead of failing.
+3. If any consuming repo has a `custom_sections:` entry anchored (`after:`/`before:`) to `<name>`, that anchor is now orphaned. Same graceful handling applies: the generator warns to stderr and drops that custom section from the output rather than failing, so the sync PR still opens — the PR diff (the custom section disappearing) is the signal for that pipeline's maintainer to re-anchor it to a section that still exists.
