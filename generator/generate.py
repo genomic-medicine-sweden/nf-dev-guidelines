@@ -42,14 +42,6 @@ class Config:
         }
 
     def _resolve_sections(self, config_path: Path) -> list:
-        if "sections" in self._dict:
-            sys.exit(
-                f"ERROR: {config_path} sets 'sections', which is no longer supported. Every consuming "
-                "repo now gets all of DEFAULT_SECTIONS by default. Use 'exclude_sections:' to drop "
-                "specific ones and 'custom_sections:' (with 'after:'/'before:' anchors) to interleave "
-                "pipeline-specific content. See the nf-dev-guidelines README."
-            )
-
         exclude = self._dict.get("exclude_sections")
         custom = self._dict.get("custom_sections")
 

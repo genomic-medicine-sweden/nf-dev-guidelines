@@ -162,33 +162,6 @@ jobs:
           print("OK: an orphaned custom_sections anchor warns and is skipped, generation still succeeds")
           EOF
 
-      - name: A 'sections:' key should now be a hard error
-        run: |
-          python3 - <<'EOF'
-          import pathlib
-          import subprocess
-          import tempfile
-
-          config_path = pathlib.Path(tempfile.mktemp(suffix=".yaml"))
-          config_path.write_text("title: x\nsections:\n  - general\n")
-          result = subprocess.run(
-              [
-                  "python", "generator/generate.py",
-                  "--config", str(config_path),
-                  "--guidelines", ".",
-                  "--repo-root", ".",
-                  "--output", "/tmp/should-not-exist.md",
-              ],
-              capture_output=True,
-              text=True,
-          )
-          if result.returncode == 0:
-              raise SystemExit("Expected generate.py to fail when 'sections:' is set, but it succeeded")
-          if "no longer supported" not in result.stderr:
-              raise SystemExit(f"Expected a clear rejection message, got:\n{result.stderr}")
-          print("OK: 'sections:' is correctly rejected with a clear error")
-          EOF
-
       - name: Lint both outputs
         run: |
           python3 - <<'EOF'

@@ -53,7 +53,7 @@ vars:
   modules_note: "Always prefer a module from nf-core or genomic-medicine-sweden over writing a local one. Only add to modules/local/ as a last resort when the use case is too pipeline-specific."
 ```
 
-There is no way to fully hand-write the section list anymore — a bare `sections:` key is a hard error. This keeps every consuming repo receiving new shared sections automatically; if you need a section excluded or custom content placed at a specific point, use `exclude_sections:`/`custom_sections:` above.
+There is no way to fully hand-write the section list anymore. This keeps every consuming repo receiving new shared sections automatically; if you need a section excluded or custom content placed at a specific point, use `exclude_sections:`/`custom_sections:` above.
 
 ### 2. Add pipeline-specific section files
 
