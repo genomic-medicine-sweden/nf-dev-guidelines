@@ -24,7 +24,7 @@ nf-dev-guidelines/
 
 ## Consuming repository setup
 
-### 1. Add `assets/nf-dev-guidelines.yaml`
+### 1. Add `assets/contribution-guidelines-config.yaml`
 
 Create this file in the consuming repository:
 
@@ -99,7 +99,7 @@ jobs:
       - name: Generate CONTRIBUTING.md
         run: |
           python /tmp/nf-dev-guidelines/generator/generate.py \
-            --config assets/nf-dev-guidelines.yaml \
+            --config assets/contribution-guidelines-config.yaml \
             --guidelines /tmp/nf-dev-guidelines \
             --repo-root . \
             --output docs/CONTRIBUTING.md
@@ -129,14 +129,14 @@ jobs:
 
 ### 4. Disable nf-core `template_strings` lint for the generated file
 
-nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `nf-dev-guidelines.yaml` file contains `{{ }}` which would cause this check to fail.
+nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `contribution-guidelines-config.yaml` file contains `{{ }}` which would cause this check to fail.
 
 Add the following to `.nf-core.yml` in the consuming repository:
 
 ```yaml
 lint:
   template_strings:
-    - assets/nf-dev-guidelines.yaml
+    - assets/contribution-guidelines-config.yaml
 ```
 
 ## Template variables reference
