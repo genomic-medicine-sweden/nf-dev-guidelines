@@ -6,7 +6,7 @@ on:
       config-path:
         description: "Path to the nf-dev-guidelines config file in the consuming repo"
         type: string
-        default: assets/nf-dev-guidelines.yaml
+        default: assets/contribution-guidelines-config.yaml
       output-path:
         description: "Where to write the generated CONTRIBUTING.md in the consuming repo"
         type: string
