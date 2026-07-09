@@ -14,7 +14,10 @@ body:
     id: description
     attributes:
       label: What should change?
-      description: Describe the proposed change to the guidelines.
+      description: |
+      	Describe the proposed change to the guidelines.
+      	Remember that changes in common sections in this repository
+      	are reflected in `CONTRIBUTING.md` of every consuming pipeline.
     validations:
       required: true
 
