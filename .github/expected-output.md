@@ -9,7 +9,7 @@
 <!-- START doctoc -->
 <!-- END doctoc -->
 
-## Intro
+## Introduction
 
 Hi there!
 Many thanks for taking an interest in improving genomic-medicine-sweden/test-pipeline.
