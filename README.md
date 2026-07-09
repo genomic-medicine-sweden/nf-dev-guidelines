@@ -77,7 +77,7 @@ jobs:
     secrets: inherit
 ```
 
-Only needed if your repo doesn't use the defaults (`assets/nf-dev-guidelines.yaml` and `docs/CONTRIBUTING.md`):
+Only needed if your repo doesn't use the defaults (`assets/contribution-guidelines-config.yaml` and `docs/CONTRIBUTING.md`):
 
 ```yaml
     uses: genomic-medicine-sweden/nf-dev-guidelines/.github/workflows/sync.yml@main
