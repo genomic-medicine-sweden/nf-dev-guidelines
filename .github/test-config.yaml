@@ -1,9 +1,7 @@
 title: Test Pipeline Contributing Guide
 
-intro: |
-  Test pipeline for validating the nf-dev-guidelines generator.
-
 sections:
+  - introduction
   - general
   - coding_conventions
   - updating_contribution_guidelines

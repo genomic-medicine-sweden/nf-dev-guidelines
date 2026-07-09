@@ -4,12 +4,21 @@
 
 # Test Pipeline Contributing Guide
 
-Test pipeline for validating the nf-dev-guidelines generator.
-
 ## Table of contents
 
 <!-- START doctoc -->
 <!-- END doctoc -->
+
+## Introduction
+
+Hi there!
+Many thanks for taking an interest in improving genomic-medicine-sweden/test-pipeline.
+
+We try to manage the required tasks for genomic-medicine-sweden/test-pipeline using GitHub issues, you probably came to this page when creating one.
+Please use the pre-filled template to save time.
+
+However, don't be put off by this template - other more general issues and suggestions are welcome!
+Contributions to the code are even more welcome ;)
 
 ## General
 
