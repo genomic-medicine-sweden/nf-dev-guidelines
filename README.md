@@ -52,7 +52,7 @@ vars:
 
 ### 2. Add pipeline-specific section files
 
-Create any files referenced as `file:` entries in `sections:` (e.g. `contributing/publishing.md` above). Each file is rendered as a Jinja2 template with the same `vars:` available to the shared sections, and is inserted as-is at that position in the document — so, unlike the shared sections in `sections/`, it must include its own markdown heading.
+Create any files referenced as `file:` entries in `sections:` (e.g. `contributing/publishing.md` above). Each file is rendered as a Jinja2 template with the same `vars:` available to the shared sections, and is inserted as-is at that position in the document.
 
 ### 3. Add the sync workflow
 
