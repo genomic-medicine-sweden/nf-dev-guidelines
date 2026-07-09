@@ -87,18 +87,6 @@ Only needed if your repo doesn't use the defaults (`assets/contribution-guidelin
     secrets: inherit
 ```
 
-### 4. Disable nf-core `template_strings` lint for the generated file
-
-nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `contribution-guidelines-config.yaml` file contains `{{ }}` which would cause this check to fail.
-
-Add the following to `.nf-core.yml` in the consuming repository:
-
-```yaml
-lint:
-  template_strings:
-    - assets/contribution-guidelines-config.yaml
-```
-
 ## Template variables reference
 
 Variables are passed via `vars:` in `repo-config.yaml` and are available to all section files as Jinja2 variables.
