@@ -6,11 +6,13 @@ intro: |
 sections:
   - general
   - coding_conventions
+  - updating_contribution_guidelines
 
 vars:
   repo_name: genomic-medicine-sweden/test-pipeline
   repo_url: https://github.com/genomic-medicine-sweden/test-pipeline
   codespaces_url: https://github.com/genomic-medicine-sweden/test-pipeline/codespaces
+  extra_semantic_versioning_notes: "Bugs fixed between releases belong in the `Fixed` section of the changelog, whereas bug fixes that appeared and were solved in dev should go in the `Changed` section."
   pre_commit_note: "This repository includes the nf-core pipelines schema docs hook."
   workflow_file: workflows/test-pipeline.nf
   reuse_note: "Follow the DRY (Don't Repeat Yourself) principle."

@@ -24,7 +24,7 @@ nf-dev-guidelines/
 
 ## Consuming repository setup
 
-### 1. Add `assets/nf-dev-guidelines.yaml`
+### 1. Add `assets/contribution-guidelines-config.yaml`
 
 Create this file in the consuming repository:
 
@@ -82,21 +82,21 @@ Only needed if your repo doesn't use the defaults (`assets/contribution-guidelin
 ```yaml
     uses: genomic-medicine-sweden/nf-dev-guidelines/.github/workflows/sync.yml@main
     with:
-      config-path: assets/custom-config.yaml
-      output-path: docs/CONTRIBUTING.md
+      config-path: path/to/config.yaml
+      output-path: path/to/CONTRIBUTING.md
     secrets: inherit
 ```
 
 ### 4. Disable nf-core `template_strings` lint for the generated file
 
-nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `nf-dev-guidelines.yaml` file contains `{{ }}` which would cause this check to fail.
+nf-core's `template_strings` lint check flags any `{{ }}` patterns in the repository as unrendered Jinja2 placeholders. The `contribution-guidelines-config.yaml` file contains `{{ }}` which would cause this check to fail.
 
 Add the following to `.nf-core.yml` in the consuming repository:
 
 ```yaml
 lint:
   template_strings:
-    - assets/nf-dev-guidelines.yaml
+    - assets/contribution-guidelines-config.yaml
 ```
 
 ## Template variables reference
