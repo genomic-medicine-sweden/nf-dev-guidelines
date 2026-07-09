@@ -1,9 +1,7 @@
 title: Test Pipeline Contributing Guide (full)
 
-intro: |
-  Test pipeline for {{ repo_name }} — validates the generator with all optional variables set.
-
 sections:
+  - intro
   - general
   - coding_conventions
   - updating_contribution_guidelines
