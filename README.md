@@ -82,7 +82,7 @@ Only needed if your repo doesn't use the defaults (`assets/contribution-guidelin
 ```yaml
     uses: genomic-medicine-sweden/nf-dev-guidelines/.github/workflows/sync.yml@main
     with:
-      config-path: assets/nf-dev-guidelines.yaml
+      config-path: assets/custom-config.yaml
       output-path: docs/CONTRIBUTING.md
     secrets: inherit
 ```
