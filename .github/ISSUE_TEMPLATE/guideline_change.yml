@@ -2,14 +2,6 @@ name: Guideline change proposal
 description: Propose a change to the shared developer guidelines in this repo
 labels: ["proposal"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Changes here are pulled into every consuming pipeline's
-        `CONTRIBUTING.md`. Please describe and motivate the change here
-        before opening a PR, and reference this issue from the PR. If you
-        plan to open the PR yourself, assign yourself to this issue.
-
   - type: textarea
     id: description
     attributes:
