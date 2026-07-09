@@ -1,6 +1,5 @@
 name: Guideline change proposal
 description: Propose a change to the shared developer guidelines in this repo
-title: "[Guidelines]: "
 labels: ["proposal"]
 body:
   - type: markdown
