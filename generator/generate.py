@@ -44,13 +44,18 @@ class Config:
         except UndefinedError as e:
             sys.exit(f"ERROR: Undefined variable in {source_name}: {e}")
 
-    def _render_section(self, item, sections_env: Environment) -> str:
+    def _render_section(self, item, sections_env: Environment) -> str | None:
         if isinstance(item, str):
             filename = f"{item}.md"
             try:
                 template = sections_env.get_template(filename)
             except Exception:
-                sys.exit(f"ERROR: Section '{item}' not found at {self._guidelines_dir / 'sections' / filename}")
+                print(
+                    f"WARNING: Section '{item}' not found at {self._guidelines_dir / 'sections' / filename} "
+                    f"(removed upstream?) — skipping. Remove '{item}' from 'sections:' in your config.",
+                    file=sys.stderr,
+                )
+                return None
             try:
                 return template.render(**self.variables).strip()
             except UndefinedError as e:
@@ -75,7 +80,11 @@ class Config:
             loader=FileSystemLoader(str(self._guidelines_dir / "sections")),
             **_JINJA_DEFAULTS,
         )
-        rendered_sections = [self._render_section(item, sections_env) for item in self.sections]
+        rendered_sections = [
+            rendered
+            for item in self.sections
+            if (rendered := self._render_section(item, sections_env)) is not None
+        ]
 
         output_env = Environment(
             loader=FileSystemLoader(str(self._guidelines_dir / "templates")),

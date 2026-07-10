@@ -116,4 +116,8 @@ Variables are passed via `vars:` in `repo-config.yaml` and are available to all 
 
 1. Create `sections/<name>.md` — a Jinja2 template starting with the appropriate markdown heading.
 2. Update `sections/` variable documentation in this README if it introduces new template variables.
-3. Merge to `main` — consuming repositories will pick up the change on their next daily sync.
+3. Merge to `main`. New sections are opt-in: existing consuming repositories won't render it until they add `<name>` to `sections:` in their own config.
+
+## Removing a shared section
+
+Deleting a `sections/*.md` file that a consuming repository still references in `sections:` does not break their sync workflow: the generator prints a warning to stderr, skips the section, and still generates the rest of the document, so the daily sync PR opens as usual. Reviewing that PR's diff (the section's content disappearing) is the signal for the pipeline maintainer to remove the stale entry from their `sections:` list.
