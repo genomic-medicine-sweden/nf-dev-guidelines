@@ -45,15 +45,15 @@ Release versioning is maintained according to [Semantic Versioning](https://semv
 
 :warning: Only in the unlikely and regretful event of a release happening with a bug.
 
-- Make a new branch `patch` based on `upstream/main` or `upstream/master`.
-- Fix the bug, and bump the version using `nf-core pipelines bump-version (X.Y.Z+1)`.
-- Open a pull-request from `patch` to `main`/`master` with the changes.
+- Make a new branch `patch` based on `main` or `master`.
+- Fix the bug, and bump the version using `nf-core pipelines bump-version (X.Y.Z+1).
+- Push the branch, preferably to the upstream repository (not the fork), and open a pull-request from `patch` to `main`/`master` with the changes.
 - Merge the pull-request using "Squash and merge".
 - Create a new release.
 
 To merge the changes back into the development branch:
-  - Checkout a new `merge-master-to-dev` branch based on `upstream/dev`.
-  - Merge `upstream/master` into this branch.
+  - Checkout a new `merge-master-to-dev` branch based on `dev`.
+  - Merge `master` into this branch.
   - Open a pull-request to `dev`.
   - Merge the pull-request using "Create a merge commit".
 
