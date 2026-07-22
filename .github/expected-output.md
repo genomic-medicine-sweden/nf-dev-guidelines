@@ -61,7 +61,7 @@ Bugs fixed between releases belong in the `Fixed` section of the changelog, wher
 :warning: Only in the unlikely and regretful event of a release happening with a bug.
 
 - Make a new branch `patch` based on `upstream/main` or `upstream/master`.
-- Fix the bug, and bump version (X.Y.Z+1).
+- Fix the bug, and bump the version using `nf-core pipelines bump-version (X.Y.Z+1)`.
 - Open a pull-request from `patch` to `main`/`master` with the changes.
 - Merge the pull-request using "Squash and merge".
 - Create a new release.
