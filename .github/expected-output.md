@@ -63,6 +63,16 @@ Bugs fixed between releases belong in the `Fixed` section of the changelog, wher
 - Make a new branch `patch` based on `upstream/main` or `upstream/master`.
 - Fix the bug, and bump version (X.Y.Z+1).
 - Open a pull-request from `patch` to `main`/`master` with the changes.
+- Merge the pull-request using "Squash and merge".
+- Create a new release.
+
+To merge the changes back into the development branch:
+  - Checkout a new `merge-master-to-dev` branch based on `upstream/dev`.
+  - Merge `upstream/master` into this branch.
+  - Open a pull-request to `dev`.
+  - Merge the pull-request using "Create a merge commit".
+
+> **Important:** Do not use "Squash and merge" when merging `main`/`master` into `dev`. Squashing creates a new commit and loses the merge ancestry, which can cause git to treat the same changes as unmerged in future merges, leading to unnecessary conflicts and a more confusing history.
 
 #### Nextflow version bumping
 
